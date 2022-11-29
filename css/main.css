@@ -1,0 +1,23 @@
+body{
+	margin: 0;
+}
+h1{
+	text-align: center;
+	background: url() repeat fixed center;
+	font-size: 5vw;
+}
+.logo{
+	display: block;
+	width: 30vw;
+	margin: 5vh auto;
+}
+.mui-input-row{
+	display: block;
+	margin: 5vh auto;
+	text-align: center;
+	font-size: 17px;
+}
+.select{
+	display: inline-block;
+	font-size: 17px;
+}
