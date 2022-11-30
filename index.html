@@ -4,29 +4,39 @@
 		<meta charset="utf-8" />
 		<title>新大陆教育证书下载平台</title>
 		<link rel="stylesheet" type="text/css" href="./css/main.css"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="./js/main.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<img class="logo" src="img/新大陆.png" >
-		<h1>新大陆教育证书下载平台</h1>
-		<div class="mui-input-row">
-			<div style="display: inline;">选择您参加的考试：</div>
-			<select name="exams-list" class="select">
-				<option value="示例1">示例1</option>
-				<option value="示例2">示例2</option>
-				<option value="示例3">示例3</option>
-			</select>
-		</div>
-		<div class="mui-input-row">
-			<label>身份证号码：</label>
-			<input type="text" placeholder="">
-			<button type="button" class="mui-btn">提交</button>
-		</div>
-		<div class="mui-input-row" style="color: cornflowerblue;display: none;">
-			已检索到对应证书，请 <a href="">点击下载</a>
-		</div>
-		<div class="mui-input-row" style="color: red;display: none;">
-			未检索到对应证书，请与相关考务人员咨询
+		<div class="g-glossy">
+			<img class="logo" src="img/新大陆.png" >
+			<h1>新大陆教育证书下载平台</h1>
+			<div class="mui-input-row">
+				<div style="display: inline;">选择您参加的考试：</div>
+				<select name="exams-list" class="select form-control info-select" id="item_name" onchange="change(this.options[this.options.selectedIndex].value)">
+					<!-- <option value="示例1">示例1</option>
+					<option value="示例2">示例2</option>
+					<option value="示例3">示例3</option> -->
+				</select>
+			</div>
+			<div class="mui-input-row">
+				<label>身份证号码：</label>
+				<input type="text" placeholder="" id="myinput">
+				<button type="button" class="btn-11" onclick="MyClick()"><span>提交</span></button>
+			</div>
+			<div id="haveFind" class="mui-input-row" style="color: cornflowerblue;display: none;">
+				<div style="font-weight: bolder;">已检索到对应证书。</div>
+				<span>第一步：点击认证，认证成功后将关闭窗口。</span><a href="javascript:void(0)" id='outNet' onclick="OutNet()">外网认证</a>&nbsp;|&nbsp;<a href="javascript:void(0)" id='inNet' onclick="InNet()">内网认证</a><br/>
+				<span>第二步：下载证书。</span><a href="javascript:void(0)" id='outNetDown' target="_blank">外网下载</a>&nbsp;|&nbsp;<a href="javascript:void(0)" id='inNetDown' target="_blank">内网下载</a><br/>
+				<div style="color: goldenrod;">* 内网认证和下载需要新大陆内部网络访问。</div>
+			</div>
+			<div id="noFind" class="mui-input-row" style="color: red;display: none;">
+				未检索到对应证书，请咨询相关考务人员
+			</div>
+			<div id='idcard' class="mui-input-row" style="color: red;display: none;">
+				身份证号码不正确!
+			</div>
+			<div id="divCustomers"></div>
 		</div>
 	</body>
 </html>
