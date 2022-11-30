@@ -63,7 +63,7 @@ select::-ms-expand { display: none; }
     -moz-appearance:none;
     -webkit-appearance:none;
     -ms-appearance:none;
-    background: url(img/down.png) no-repeat scroll right center transparent;           
+    background: no-repeat scroll right center transparent;           
 }
 
 #myinput{
@@ -71,7 +71,7 @@ select::-ms-expand { display: none; }
 	margin: 10px auto;
 	height: 34px;
 	padding: 0px 12px;
-	font-size: 14px;
+	font-size: 18px;
 	color: #555;
 	background-color: #fff;
 	background-image: none;
@@ -84,7 +84,7 @@ select::-ms-expand { display: none; }
 	-moz-appearance:none;
 	-webkit-appearance:none;
 	-ms-appearance:none;
-	background: url(img/down.png) no-repeat scroll right center transparent;
+	background: no-repeat scroll right center transparent;
 	
 }
 

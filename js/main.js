@@ -1,16 +1,22 @@
-var share_id =''
-var password =''
-var share_filename =''
+var share_id ='';
+var password ='';
+var share_filename ='';
+var outNetUrl ='';
+var inNetUrl ='';
+var aliyunUrl = 'https://newland-json.oss-cn-fuzhou.aliyuncs.com';
+
 //请求配置文件
 $.ajax({ 
 	type:"get", //使用get方式
-	url: "https://newland-json.oss-cn-fuzhou.aliyuncs.com/config.json", //json文件相对于这个HTML的路径
+	url: aliyunUrl+"/config.json", //json文件相对于这个HTML的路径
 	dataType:"json",
 	async:false,
 	success:function(data) {
 		share_id = encodeURIComponent(data['share_id']);
 		password = encodeURIComponent(data['password']);
 		share_filename = encodeURIComponent(data['share_filename']);
+		outNetUrl =data['outNet'];
+		inNetUrl =data['inNet'];
 	},
 	error:function() {
 		alert("请求失败");
@@ -18,7 +24,7 @@ $.ajax({
 });
 
 //获取根目录信息
-var path = "https://newland-json.oss-cn-fuzhou.aliyuncs.com/json/"+share_filename+".json"
+var path = aliyunUrl + "/json/"+share_filename+".json"
 $.ajax({
 	type:"get", //使用get方式
 	url:path, //json文件相对于这个HTML的路径
@@ -48,30 +54,31 @@ var name_id = new Array(); //存放具体证书名
 var name_exam; //存放考试列表
 window.onload = function(){
 	var item_name = document.getElementById('item_name')
-	setTimeout(3000); //需要一定的读取时间
-	path = item_name.options[0].value;
-	name_exam = path;
-	path = "https://newland-json.oss-cn-fuzhou.aliyuncs.com/json"+encodeURIComponent(path)+'.json';
-	$.ajax({
-		type:"get", //使用get方式
-		url: path, //json文件相对于这个HTML的路径
-		dataType:"json",
-		success:function(data) {
-			//这个data就是json数据
-			// console.log(data)
-			var items = data['data']['files'];
-			var i=0;
-			name_id = new Array();
-			for(item in items){
-				name_id.push(items[i]['name'])
-				i=i+1;
+	setTimeout(()=>{
+		path = item_name.options[0].value;
+		name_exam = path;
+		path = aliyunUrl + "/json"+encodeURIComponent(path)+'.json';
+		$.ajax({
+			type:"get", //使用get方式
+			url: path, //json文件相对于这个HTML的路径
+			dataType:"json",
+			success:function(data) {
+				//这个data就是json数据
+				// console.log(data)
+				var items = data['data']['files'];
+				var i=0;
+				name_id = new Array();
+				for(item in items){
+					name_id.push(items[i]['name'])
+					i=i+1;
+				}
+				// console.log(name_id)
+			},
+			error:function() {
+				alert("请求失败");
 			}
-			// console.log(name_id)
-		},
-		error:function() {
-			alert("请求失败");
-		}
-	});
+		});
+	},300); //需要一定的读取时间
 	return name_exam;
 }
 
@@ -79,7 +86,7 @@ window.onload = function(){
 function change(value){   
 	// console.log(value);
 	name_exam = value;
-	path = "https://newland-json.oss-cn-fuzhou.aliyuncs.com/json"+encodeURIComponent(value)+'.json';
+	path = aliyunUrl + "/json"+encodeURIComponent(value)+'.json';
 	// console.log(path);
 	$.ajax({
 		type:"get", //使用get方式
@@ -172,8 +179,8 @@ function MyClick(){
 				var name_detail = name_id[a];
 				var timestamp = Date.parse(new Date());
 				var dlink = name_exam+'/'+ name_detail;
-				var downPathOut = 'https://112.111.22.88:15001/fsdownload/webapi/file_download.cgi/新大陆教育证书_'+name_detail+'?dlink=%22'+toHex(dlink)+'%22&noCache='+timestamp+'&_sharing_id=%22'+share_id+'%22&api=SYNO.FolderSharing.Download&version=2&method=download&mode=download&stdhtml=false'
-				var downPathIn = 'https://192.168.134.10:5001/fsdownload/webapi/file_download.cgi/新大陆教育证书_'+name_detail+'?dlink=%22'+toHex(dlink)+'%22&noCache='+timestamp+'&_sharing_id=%22'+share_id+'%22&api=SYNO.FolderSharing.Download&version=2&method=download&mode=download&stdhtml=false'
+				var downPathOut = outNetUrl + '/fsdownload/webapi/file_download.cgi/新大陆教育证书_'+name_detail+'?dlink=%22'+toHex(dlink)+'%22&noCache='+timestamp+'&_sharing_id=%22'+share_id+'%22&api=SYNO.FolderSharing.Download&version=2&method=download&mode=download&stdhtml=false'
+				var downPathIn = inNetUrl + '/fsdownload/webapi/file_download.cgi/新大陆教育证书_'+name_detail+'?dlink=%22'+toHex(dlink)+'%22&noCache='+timestamp+'&_sharing_id=%22'+share_id+'%22&api=SYNO.FolderSharing.Download&version=2&method=download&mode=download&stdhtml=false'
 				var outNetDown = document.getElementById('outNetDown');
 				outNetDown.href = downPathOut;
 				var inNetDown = document.getElementById('inNetDown');
@@ -189,14 +196,14 @@ function MyClick(){
 
 // 外网认证
 function OutNet(){
-	var shareUrlOut = 'https://112.111.22.88:15001/sharing/webapi/entry.cgi/SYNO.Core.Sharing.Login?api=SYNO.Core.Sharing.Login&method=login&version=1&sharing_id=%22'+share_id+'%22&password=%22'+password+'%22'
+	var shareUrlOut = outNetUrl + '/sharing/webapi/entry.cgi/SYNO.Core.Sharing.Login?api=SYNO.Core.Sharing.Login&method=login&version=1&sharing_id=%22'+share_id+'%22&password=%22'+password+'%22'
 	var myWindow = window.open(shareUrlOut);
 	setTimeout(function(){ myWindow.close() }, 1000);
 }
 
 // 内网认证
 function InNet(){
-	var shareUrlOut = 'https://192.168.134.10:5001/sharing/webapi/entry.cgi/SYNO.Core.Sharing.Login?api=SYNO.Core.Sharing.Login&method=login&version=1&sharing_id=%22'+share_id+'%22&password=%22'+password+'%22'
+	var shareUrlOut = inNetUrl + '/sharing/webapi/entry.cgi/SYNO.Core.Sharing.Login?api=SYNO.Core.Sharing.Login&method=login&version=1&sharing_id=%22'+share_id+'%22&password=%22'+password+'%22'
 	var myWindow = window.open(shareUrlOut);
 	setTimeout(function(){ myWindow.close() }, 1000);
 }
@@ -220,4 +227,4 @@ function fromHex(h) {
     return decodeURIComponent(escape(s))
 }
 
-console.log(navigator.platform) //判断用户的操作平台，方便针对不同平台做一些界面调整
+// console.log(navigator.platform) //判断用户的操作平台，方便针对不同平台做一些界面调整
